@@ -15,5 +15,32 @@ export const Container = styled.header`
 
   padding: 0 80px;
 
-  background: lime;
+`;
+
+export const Profile = styled.div`
+  display: flex; //Para garantir que a imagem e o texto ficará centralizada,
+  align-items: center;
+
+  > img {
+    width: 56px; // Largura
+    height: 56px; // Altura 
+    border-radius: 50%; // Deixar a imagem redonda
+  } // Esse sinal de maior é pra garantir que eu vou estilizar a imagem que existe dentro do meu componente de profile. Isso me garante a não mexer em outras imagens de outros contextos.
+
+  > div {
+    display: flex; // alinhamento
+    flex-direction: column; // texto um embaixo do outro
+    margin-left: 16px;
+    line-height: 24px;
+
+    span {
+      font-size: 14px;
+      color: ${({ theme }) => theme.COLORS.GRAY_100};
+    }
+
+    strong {
+      font-size: 18px;
+      color: ${({ theme }) => theme.COLORS.WHITE};
+    }
+  };
 `;
