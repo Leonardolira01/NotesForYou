@@ -12,7 +12,7 @@ export function Button({ title, loading = false, ...rest }) {
   )
 }
 
-// ou usar dessa forma desestruturada:
+// ou usar dessa forma:
 // export function Button(props) {
 
 //   return (
