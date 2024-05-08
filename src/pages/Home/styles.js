@@ -60,6 +60,8 @@ export const Search = styled.div`
 export const Content = styled.div`
     grid-area: content;
     //background: blue; apenas para TESTE DE MARCAÇÃO 
+    padding: 0 64px;
+    overflow-y: auto; //se eu deixa scroll ele ficará fixo, no auto ele ativa a rolagem sozinho;
 `;
 
 export const NewNote = styled.button`
