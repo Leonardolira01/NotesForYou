@@ -19,25 +19,39 @@ export const Container = styled.div`
 
 export const Brand = styled.div`
   grid-area: brand;
-  background: lime;
+  //background: lime; apenas para TESTE DE MARCAÇÃO 
+  display: flex;//Ter o conteúdo bem centralizado;
+  justify-content: center; //Ter o conteúdo bem centralizado;
+  align-items: center;//Ter o conteúdo bem centralizado;
+
+  border-bottom-width: 1px; //borda pequena;
+  border-bottom-style: solid; //linha solida;
+  border-bottom-color: ${({ theme }) => theme.COLORS.BACKGROUND_700};
+
+  background-color: ${({ theme }) => theme.COLORS.BACKGROUND_900};
+
+  > h1 {
+    font-size: 24px;
+    color: ${({ theme }) => theme.COLORS.ORANGE};
+  }
 `;
 
 export const Menu = styled.ul`
   grid-area: menu;
-  background: green;
+  //background: green; apenas para TESTE DE MARCAÇÃO 
 `;
 
 export const Search = styled.div`
   grid-area: search;
-  background: violet;
+  //background: violet; apenas para TESTE DE MARCAÇÃO 
 `;
 
 export const Content = styled.div`
     grid-area: content;
-    background: blue;
+    //background: blue; apenas para TESTE DE MARCAÇÃO 
 `;
 
 export const NewNote = styled.button`
     grid-area: newnote;
-    background: yellow;
+    //background: yellow; apenas para TESTE DE MARCAÇÃO 
 `;
