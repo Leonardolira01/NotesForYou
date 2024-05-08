@@ -1,7 +1,8 @@
-import { FiPlus } from 'react-icons/fi'; //add o icone do botão newnote
+import { FiPlus, FiSearch } from 'react-icons/fi'; //add o icone do botão newnote
 import { Container, Brand, Menu, Search, Content, NewNote } from './styles'; //Container=vai envolver toda a aplicação, a página / Brand=Parte do logo/ Menu= o que vai ficar fixo / Search=busca / Content= os conteúdos/ NewNote = botão para uma nova nota; 
 
 import { Header } from '../../components/Header';
+import { Input } from '../../components/Input';
 import { ButtonText } from '../../components/ButtonText';
 
 export function Home(){
@@ -20,7 +21,7 @@ export function Home(){
       </Menu>
 
       <Search>
-
+        <Input placeholder="Pesquisar pelo título" icon={FiSearch}/>
       </Search>
 
       <Content>
