@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { api } from '../services/api';
 
 // Criação do contexto de autenticação
@@ -13,8 +13,11 @@ function AuthProvider({ children }) {
       const response = await api.post("/sessions", { email, password });
       const { user, token } = response.data;
 
+      localStorage.setItem("@notesforyou:user", JSON.stringify(user));
+      localStorage.setItem("@notesforyou:token", token);
+
       api.defaults.headers.authorization = `Bearer $(token)`;
-      setData({ user, token})
+      setData({ user, token});
 
     } catch (error) {
       if (error.response) {
@@ -25,9 +28,34 @@ function AuthProvider({ children }) {
     }
   }
 
+  function signOut(){
+    localStorage.removeItem("@notesforyou:token");
+    localStorage.removeItem("@notesforyou:user");
+
+    setData({});
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem("@notesforyou:token");
+    const user = localStorage.getItem("@notesforyou:user");
+
+    if(token && user) {
+      api.defaults.headers.authorization = `Bearer $(token)`;
+
+      setData ({
+        token,
+        user: JSON.parse(user)
+      });
+    }
+  }, []);
+
   // Prover o contexto para os filhos
   return (
-    <AuthContext.Provider value={{ signIn, user: data.user }}>
+    <AuthContext.Provider value={{ 
+      signIn, 
+      signOut,
+      user: data.user,
+    }}>
       {children}
     </AuthContext.Provider>
   );
