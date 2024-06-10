@@ -17,7 +17,7 @@ export function NoteItem({ isNew, value, onClick, ...rest }){
         onClick={onClick}
         className={isNew ? 'button-add' : 'button-delete'}
       >
-        {isNew ? <FiPlus /> : <FiX />} 
+        { isNew ? <FiPlus /> : <FiX />} 
       </button> 
     </Container>
     // Se for novo, se é um novo, eu vou renderizar o FePlus para aparecer o ícone de adicionar. Caso contrário, eu quero que apareça o ícone FeX, que é o de fechar.
