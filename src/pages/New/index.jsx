@@ -48,11 +48,17 @@ export function New() {
     if(!title) {
       return alert('Digite um título para a nota.');
     }
-    if (newTag.length > 0 || newLink.length > 0) {
-      return alert(`Você deixou um Marcador ou um Link, mas não o adicionou.
-      \nCertifique-se de adicioná-lo ou removê-lo. `);
-    }
 
+    if (newLink) {
+      return alert(`Você deixou um Marcador ou um Link no campo, mas não o adicionou.
+      Certifique-se de adicioná-lo ou removê-lo. `);
+    }
+    
+    if (newTag) {
+      return alert(`Você deixou um Marcador ou um Link no campo, mas não o adicionou.
+      Certifique-se de adicioná-lo ou removê-lo. `);
+    }
+    
     await api.post('/notes', { 
       title, 
       description, 
