@@ -28,11 +28,21 @@ export function Home() {
     }
   }
 
+  useEffect(() => {
+    async function fetchTags() {
+      const response = await api.get("/tags");
+      setTags(response.data);
+    }
+
+    fetchTags();
+  }, []);
+
   useEffect( () => {
     async function fetchNotes() {
       const response = await api.get(
         `/notes?title=${search}&tags=${tagsSelected}`
         );
+        
         setNotes(response.data);
     }
 
@@ -52,7 +62,7 @@ export function Home() {
           <ButtonText 
             title='Todos' 
             onClick={() => handleTagSelected("all")}
-            isActive={tagsSelected.length === 0}
+            $isActive={tagsSelected.length === 0}
           />
         </li>
         {
@@ -61,7 +71,7 @@ export function Home() {
               <ButtonText 
                 title={tag.name}
                 onClick={() => handleTagSelected(tag.name)}
-                isActive={tagsSelected.includes(tag.name)}
+                $isActive={tagsSelected.includes(tag.name)}
               />
             </li>
           ))
@@ -70,20 +80,21 @@ export function Home() {
       </Menu>
 
       <Search>
-        <Input placeholder="Pesquisar pelo título" icon={FiSearch}/>
+        <Input placeholder="Pesquisar pelo título" icon={FiSearch}
+        onChange={() => setSearch(e.target.value)}
+      />
       </Search>
 
       <Content>
         <Section title="Minhas notas">
-          <Note data={{
-            title: 'React',
-            tags: [
-              { id: '1', name: 'React.js' },
-              { id: '2', name: 'Styled-Components' }
-            ]
-          }}
-          />
-
+          {
+            notes.map(note => (
+              <Note
+                key={String(note.id)}
+                data={note}
+              />
+            ))
+          }      
         </Section>
       </Content>
 

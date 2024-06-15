@@ -4,7 +4,7 @@ import { Container } from './styles'
 
 export function NoteItem({ isNew, value, onClick, ...rest }){
   return (
-    <Container isNew={isNew}> 
+    <Container $isNew={isNew}> 
       <input //passou a propriedade isNew para dentro do container
         type="text"
         value={value} 
