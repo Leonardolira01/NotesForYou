@@ -1,104 +1,106 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect
+} from 'react';
 
-import { api } from '../services/api';
-
-// aqui é criado o contexto
 const AuthContext = createContext({});
 
-/**
- * HOOK de autenticação;
- * a prop 'children' é toda <Rotes /> que for acessada na main.jsx
- */
+import { api } from "../services/api";
+
 function AuthProvider({ children }) {
-	const [data, setData] = useState({})
+  const [data, setData] = useState({});
 
-	async function signIn({ email, password }) {
-		try {
-			// envia a requisição de se autenticar no backend (api)
-			const response = await api.post('/sessions', { email, password });
-			// desestrutura as informações da resposta que o front (aqui) recebeu
-			const { user, token } = response.data;
+  async function signIn({ email, password }) {
+    try {
+      const response = await api.post("sessions", { email, password });
+      const { token, user } = response.data;
 
-			// usar o localStorage do navegador para armazenar os dados do usuário e do token
-			localStorage.setItem('@notesforyou:user', JSON.stringify(user));
-			localStorage.setItem('@notesforyou:token', token);
-			// adiciona por padrão, todas as requisições futuras terão no cabeçalho o token que recebeu na autenticação acima OBS: estamos no frontend
-			// api.defaults.headers.authorization = `Bearer ${token}`;
-			api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-			// passa as informações de dentro dessa função para o contexto desse componente
-			setData({ user, token });
-			
-		} catch (error) {
-			if (error.response) {
-				alert(error.response.data.message);
-			} else {
-				alert('Não foi possível entrar.')
-			}
-		} 
-	}
+      localStorage.setItem("@rocketnotes:user", JSON.stringify(user));
+      localStorage.setItem("@rocketnotes:token", token);
 
-	function signOut() {
-		if ( confirm('Deseja realmente sair?') ) {
+      api.defaults.headers.authorization = `Bearer ${token}`;
 
-			localStorage.removeItem('@notesforyou:token');
-			localStorage.removeItem('@notesforyou:user');
-			
-			setData({});
-		}
-	}
+      setData({ token, user });
 
-	async function updateProfile({ user, avatarFile }) {
-		try {
-			if (avatarFile) {
-				const fileUploadForm = new FormData();
-				fileUploadForm.append('avatar', avatarFile);
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.message);
+      } else {
+        alert("Não foi possível entrar.");
+      }
+    }
+  };
 
-				const response = await api.patch('/users/avatar', fileUploadForm);
-				user.avatar = response.data.avatar;
-			}
+  async function updatedProfile({ user, avatarFile }) {
+    try {
 
-			console.log(user);
-			await api.put('/users', user);
-			localStorage.setItem('@notesforyou:user', JSON.stringify(user));
-			setData({  user, token: data.token });
-			alert('Perfil atualizado.');
-		} catch (error) {
-			if (error.response) {
-				alert(error.response.data.message);
-			} else {
-				alert('Não foi possível atualizar o perfil.')
-			}
-		} 
-	}
+      if (avatarFile) {
+        const fileUploadForm = new FormData();
+        fileUploadForm.append("avatar", avatarFile);
 
-	useEffect( () => {
-		const token = localStorage.getItem('@notesforyou:token');
-		const user = localStorage.getItem('@notesforyou:user');
-		
-		if (token && user) {
-			// api.defaults.headers.authorization = `Bearer ${token}`;
-			api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const response = await api.patch("/users/avatar", fileUploadForm);
+        user.avatar = response.data.avatar;
+      }
 
-			setData({ token, user: JSON.parse(user) });
-		}
-	}, []);
+      await api.put("/users", user);
 
-	return (
-		<AuthContext.Provider value={{ 
-			signIn, 
-			signOut, 
-			updateProfile,
-			user: data.user 
-		}} >
-			{children}
-		</AuthContext.Provider>
-	);
+      localStorage.setItem("@rocketnotes:user", JSON.stringify(user));
+
+      setData({
+        token: data.token,
+        user,
+      });
+
+      alert("Perfil atualizado!");
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.message);
+      } else {
+        alert("Não foi possível atualizar o perfil.");
+      }
+    }
+  };
+
+  function signOut() {
+    localStorage.removeItem("@rocketnotes:token");
+    localStorage.removeItem("@rocketnotes:user");
+
+    setData({});
+  }
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("@rocketnotes:token");
+    const user = localStorage.getItem("@rocketnotes:user");
+
+    if (token && user) {
+      api.defaults.headers.authorization = `Bearer ${token}`;
+
+      setData({
+        token,
+        user: JSON.parse(user)
+      });
+    }
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{
+      signIn,
+      signOut,
+      updatedProfile,
+      user: data.user
+    }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 function useAuth() {
-	const consumeContext = useContext(AuthContext);
+  const context = useContext(AuthContext);
 
-	return consumeContext;
+  return context;
 }
 
 export { AuthProvider, useAuth };

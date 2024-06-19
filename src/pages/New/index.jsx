@@ -86,7 +86,7 @@ export function New() {
             <ButtonText 
               title="voltar" 
               onClick={handleBack} 
-            />
+              />
           </header>
 
           <Input 
